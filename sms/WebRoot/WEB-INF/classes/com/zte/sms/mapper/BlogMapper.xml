@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zte.sms.dao.BlogDAO">
+
+    <resultMap type="Blog" id="blogResultMap">
+    	<id property="bid" column="bid"/>
+    	<result property="title" column="title"/>
+    	<result property="content" column="content"/>
+    	<result property="createDate" column="createDate"/>
+    	
+    	<association property="student" javaType="com.zte.sms.entity.Student">
+    	    <id property="sid" column="sid"/>
+    		<result property="name" column="name"/>
+    	</association>
+    	
+    </resultMap>
+
+	<!-- public List<Blog> selectBlogsByPage(); -->
+	<select id="selectBlogsByPage" resultMap="blogResultMap">
+		SELECT
+			b.bid,b.title,b.content,b.createDate,s.name
+		FROM
+			blog b
+		LEFT JOIN student s
+			on b.sid=s.sid
+	</select>
+	
+	<!-- public List<Blog> selectBlogsByPage(); -->
+	<select id="selectBlogsByPageById" resultMap="blogResultMap" parameterType="Integer">
+		SELECT
+			b.bid,b.title,b.content,b.createDate,s.name
+		FROM
+			blog b
+		LEFT JOIN student s
+			on b.sid=s.sid
+		WHERE 
+		    b.sid=#{sid}
+	</select>
+	
+	<!-- 
+	public Blog selectByTitle(String username);
+	 -->
+	<select id="selectByTitle" resultType="blog">
+		SELECT
+			b.bid,b.title,b.content,b.createDate,s.name
+		FROM
+			blog b
+		LEFT JOIN student s
+			on b.sid=s.sid
+		where
+			b.title=#{title}
+		
+		
+	</select>
+	
+	<!-- 
+	 public void insertBlog(Blog blog);
+	 -->
+	<insert id="insertBlog" parameterType="blog">
+		INSERT INTO
+			blog
+			(title,content,createDate,sid)
+		VALUES
+			(#{title},#{content},#{createDate},#{sid})
+	</insert>
+	
+	<!-- 
+	public Blog selectById(int big);
+	 -->
+	<select id="selectById" resultMap="blogResultMap">
+		SELECT
+			b.bid,b.title,b.content,b.createDate,s.sid,s.name
+		FROM
+			blog b
+		LEFT JOIN student s
+			on b.sid=s.sid
+		where
+			b.bid=#{bid}
+		
+		
+	</select>	
+	
+	<!-- 
+	public void updateBlog(Blog blog);
+	 --> 
+	<update id="updateBlog" parameterType="blog">
+		UPDATE
+			blog
+		SET
+			title=#{title},content=#{content},createDate=#{createDate}
+		where 
+			bid=#{bid}
+	
+	
+	</update>
+	
+	<!-- 
+	public void deleteBlog(int big);
+	 -->
+	<delete id="deleteBlog">
+		delete
+		from
+			blog
+		where 
+			bid=#{bid}
+	</delete>
+
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zte.sms.dao.CourseDAO">
+  
+  <!-- 
+  List<Course> selectAll();
+   -->
+  <select id="selectAll" resultType="course">
+  	SELECT
+		cid,cname,cdesc,state
+  	FROM
+		course
+  </select>
+
+	<!-- insert新的Course -->
+	<insert id="insertCourse" parameterType="course">
+		insert into course
+			(cname,cdesc,state)
+		values
+			(#{cname},#{cdesc},#{state})
+	</insert>
+	
+	
+	<!-- 改变状态state -->
+	<update id="updateState" parameterType="course">
+		update course
+		set state=#{state}
+		where cid=#{cid}
+	</update>
+	
+	
+	<!-- 改变course详细信息 -->
+	<update id="updateCourseById" parameterType="course">
+		update course 
+		set cname=#{cname},cdesc=#{cdesc}
+		where cid=#{cid}
+	</update>
+	
+	<!-- 删除对应course -->
+	<delete id="deleteCourse" parameterType="Integer">
+		delete from course
+		where cid=#{cid}
+		
+	</delete>
+	
+	
+	<!-- 
+  Integer selectIdByName(String stringCellValue);
+   -->
+  <select id="selectIdByName" resultType="int">
+  	select
+  		cid
+  	from
+  		course
+  	where cname=#{cname}
+  </select>
+	
+	<!-- 根据ID查找对应的数据 -->
+	<select id="selectById" resultType="course" parameterType="Integer">
+		select cid,cname,cdesc
+		from course
+		where cid=#{cid}
+	</select>
+	
+	<select id="selectCoursesByName" resultType="course" parameterType="CourseVO">
+		select cid,cname,cdesc,state
+		from course
+		<where>
+			<if test="cname!=null and cname!=''">
+				and cname like #{cname}
+			</if>
+		</where>
+	</select>
+	
+</mapper>
